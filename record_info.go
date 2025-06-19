@@ -36,6 +36,6 @@ type RecordInfoItem struct {
 	Address   string    `xml:"Address"`
 	StartTime time.Time `xml:"StartTime"`
 	EndTime   time.Time `xml:"EndTime"`
-	Secrecy   string    `xml:"Secrecy"`
+	Secrecy   int       `xml:"Secrecy"`
 	Type      string    `xml:"Type"`
 }

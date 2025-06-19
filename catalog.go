@@ -31,41 +31,9 @@ type CatalogDeviceItem struct {
 	Owner        string `xml:"Owner"`
 	CivilCode    string `xml:"CivilCode"`
 	Address      string `xml:"Address"`
-	Parental     string `xml:"Parental"`
+	Parental     int    `xml:"Parental"`
 	ParentId     string `xml:"ParentID"`
-	RegisterWay  string `xml:"RegisterWay"`
-	Secrecy      string `xml:"Secrecy"`
+	RegisterWay  int    `xml:"RegisterWay"`
+	Secrecy      int    `xml:"Secrecy"`
 	Status       string `xml:"Status"`
 }
-
-// <?xml version="1.0" encoding="GB2312"?>
-// <Query>
-// <CmdType>Catalog</CmdType>
-// <SN>588056</SN>
-// <DeviceID>34020000001320000001</DeviceID>
-// </Query>
-
-// <?xml version="1.0" encoding="GB2312"?>
-// <Response>
-// <CmdType>Catalog</CmdType>
-// <SN>588056</SN>
-// <DeviceID>34020000001320000001</DeviceID>
-// <SumNum>1</SumNum>
-// <DeviceList Num="1">
-// <Item>
-// <DeviceID>34020000001320000001</DeviceID>
-// <Name>TL-IPC45AW-COLOR 5.1</Name>
-// <Manufacturer>TP-LINK</Manufacturer>
-// <Model>IPCamera 01</Model>
-// <Owner>Owner</Owner>
-// <CivilCode>3402000000</CivilCode>
-// <Address>Address</Address>
-// <Parental>0</Parental>
-// <ParentID>3402000000200000001</ParentID>
-// <RegisterWay>1</RegisterWay>
-// <Secrecy>0</Secrecy>
-// <Status>ON</Status>
-// </Item>
-// </DeviceList>
-// <Result>OK</Result>
-// </Response>
