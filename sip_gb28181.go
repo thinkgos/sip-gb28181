@@ -1,4 +1,4 @@
-package sip_gb28181_extra
+package sip_gb28181
 
 const (
 	CmdControl  = "Control"

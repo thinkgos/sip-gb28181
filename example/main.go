@@ -11,7 +11,7 @@ import (
 
 	"github.com/emiago/sipgo"
 	"github.com/emiago/sipgo/sip"
-	sip_gb28181_extra "github.com/thinkgos/sip-gb28181"
+	sip_gb28181 "github.com/thinkgos/sip-gb28181"
 
 	"net/http"
 	_ "net/http/pprof"
@@ -170,7 +170,7 @@ func on_register(req *sip.Request, tx sip.ServerTransaction) {
 	log.Info("New client registered", "username", cred.Username)
 
 	go func() {
-		data, _ := sip_gb28181_extra.MarshalXML(&sip_gb28181_extra.CatalogQuery{
+		data, _ := sip_gb28181.MarshalXML(&sip_gb28181.CatalogQuery{
 			CmdType:  "catalog",
 			Sn:       1000,
 			DeviceId: cred.Username,
