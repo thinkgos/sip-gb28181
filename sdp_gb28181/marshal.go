@@ -1,10 +1,10 @@
-package sdp_extend
+package sdp_gb28181
 
 import "github.com/pion/sdp/v3"
 
 type SessionDescription struct {
 	sdp.SessionDescription
-	Ssrc Ssrc
+	Ssrc *Ssrc
 }
 
 // `$type=` and CRLF size.
@@ -17,14 +17,18 @@ func (s *SessionDescription) Marshal() ([]byte, error) {
 		return nil, err
 	}
 	marsh = append(marsh, ss...)
-	marsh.addKeyValue("y=", s.Ssrc.marshalInto)
+	if s.Ssrc != nil {
+		marsh.addKeyValue("y=", s.Ssrc.marshalInto)
+	}
 	return marsh, nil
 }
 
 // MarshalSize returns the size of the SessionDescription once marshaled.
 func (s *SessionDescription) MarshalSize() (marshalSize int) { //nolint:cyclop
 	marshalSize = s.SessionDescription.MarshalSize()
-	marshalSize += lineBaseSize + s.Ssrc.marshalSize()
+	if s.Ssrc != nil {
+		marshalSize += lineBaseSize + s.Ssrc.marshalSize()
+	}
 	return
 }
 
@@ -41,12 +45,10 @@ func lenUint(i uint64) (count int) {
 	if i == 0 {
 		return 1
 	}
-
 	for i != 0 {
 		i /= 10
 		count++
 	}
-
 	return
 }
 

@@ -1,4 +1,4 @@
-package sdp_extend
+package sdp_gb28181
 
 // y字段： 为10位十进制整数字符串, 表示SSRC值.
 // 格式:
