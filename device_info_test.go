@@ -8,7 +8,6 @@ import (
 )
 
 func Test_Decode_DeviceInfoResponse(t *testing.T) {
-
 	data := `<?xml version="1.0" encoding="GB2312" ?>
 <Response>
 	<CmdType>DeviceInfo</CmdType>
