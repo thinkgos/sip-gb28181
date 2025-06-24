@@ -9,10 +9,10 @@ const (
 )
 
 const (
-	CmdControl  = "Control"
-	CmdQuery    = "Query"
-	CmdNotify   = "Notify"
-	CmdResponse = "Response"
+	Cmd_Control  = "Control"
+	Cmd_Query    = "Query"
+	Cmd_Notify   = "Notify"
+	Cmd_Response = "Response"
 )
 
 const (

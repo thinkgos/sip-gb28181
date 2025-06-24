@@ -23,7 +23,7 @@ func Test_Decode_DeviceInfoResponse(t *testing.T) {
 </Response>`
 
 	want := DeviceInfoResponse{
-		XMLName:      xml.Name{Local: CmdResponse},
+		XMLName:      xml.Name{Local: Cmd_Response},
 		CmdType:      CmdType_DeviceInfo,
 		Sn:           508983,
 		DeviceId:     "34020000001118000001",

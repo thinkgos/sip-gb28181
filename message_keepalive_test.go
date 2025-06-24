@@ -18,7 +18,7 @@ func Test_Encode_Keepalive(t *testing.T) {
 	require.NoError(t, err)
 	t.Logf("got: %v\r\n", string(getData))
 
-	want.XMLName = xml.Name{Local: CmdNotify}
+	want.XMLName = xml.Name{Local: Cmd_Notify}
 	got := Keepalive{}
 	err = UnmarshalXML(getData, &got)
 	require.NoError(t, err)
@@ -34,7 +34,7 @@ func Test_Decode_Keepalive(t *testing.T) {
 <Status>OK</Status>
 </Notify>`
 	want := Keepalive{
-		XMLName:  xml.Name{Local: CmdNotify},
+		XMLName:  xml.Name{Local: Cmd_Notify},
 		CmdType:  "Keepalive",
 		Sn:       9,
 		DeviceId: "34020000001320000001",
