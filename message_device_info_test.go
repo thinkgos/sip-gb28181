@@ -32,6 +32,8 @@ func Test_Decode_DeviceInfoResponse(t *testing.T) {
 		Model:        "IPC-HFW1220M-I1",
 		Firmware:     "V2.420.14.R.2016-06-18",
 		Result:       "OK",
+		MaxCamera:    1,
+		MaxAlarm:     0,
 	}
 	got := DeviceInfoResponse{}
 	err := UnmarshalXML([]byte(data), &got)

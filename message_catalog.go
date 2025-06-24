@@ -24,16 +24,16 @@ type CatalogDeviceEntry struct {
 }
 
 type CatalogDeviceItem struct {
-	DeviceId     string `xml:"DeviceID"`
-	Name         string `xml:"Name"`
-	Manufacturer string `xml:"Manufacturer"`
-	Model        string `xml:"Model"`
-	Owner        string `xml:"Owner"`
-	CivilCode    string `xml:"CivilCode"`
-	Address      string `xml:"Address"`
-	Parental     int    `xml:"Parental"`
-	ParentId     string `xml:"ParentID"`
-	RegisterWay  int    `xml:"RegisterWay"`
-	Secrecy      int    `xml:"Secrecy"`
-	Status       string `xml:"Status"`
+	DeviceId     string `xml:"DeviceID"`     // 通道id
+	Name         string `xml:"Name"`         // 名称
+	Manufacturer string `xml:"Manufacturer"` // 制造商
+	Model        string `xml:"Model"`        // 型号
+	Owner        string `xml:"Owner"`        // 拥有者
+	CivilCode    string `xml:"CivilCode"`    // 民用编码
+	Address      string `xml:"Address"`      // 地址
+	Parental     int    `xml:"Parental"`     // 隶属关系
+	ParentId     string `xml:"ParentID"`     // 父级设备id
+	RegisterWay  int    `xml:"RegisterWay"`  // 注册方式
+	Secrecy      int    `xml:"Secrecy"`      // 保密等级
+	Status       string `xml:"Status"`       // 状态
 }
