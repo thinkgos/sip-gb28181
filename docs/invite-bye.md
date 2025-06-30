@@ -1,0 +1,126 @@
+# invite bye
+
+- ---> INVITE
+
+```sh
+INVITE sip:34020000001318000001@3402000000 SIP/2.0
+Supported:
+Allow: INVITE, ACK, CANCEL, MESSAGE, REGISTER
+Via: SIP/2.0/UDP 10.110.18.12:15060;branch=z9hG4bKlJokE2WBziHPvUlfeWPlw6WCwjStRKkA;rport
+CSeq: 1 INVITE
+From: "SipServer" <sip:34020000002000000001@3402000000>;tag=FHO5ndkKpblM1wu8Vy6j
+To: <sip:34020000001318000001@3402000000>
+Call-ID: VqjJJAvkxIICQz2yDSdjkswI87nPvu5e
+Contact: "SipServer" <sip:34020000002000000001@3402000000>;tag=FHO5ndkKpblM1wu8Vy6j
+Max-Forwards: 70
+User-Agent: GoSIP
+Content-Type: application/sdp
+Content-Length: 261
+Subject: 34020000001318000001:0BEBC201,34020000002000000001:0BEBC201
+
+v=0
+o=34020000002000000001 0 0 IN IP4 10.110.18.250
+s=Play
+c=IN IP4 10.110.18.250
+t=0 0
+m=video 10000 TCP/RTP/AVP 96 98 97
+a=recvonly
+a=setup:passive
+a=connection:new
+a=rtpmap:96 PS/90000
+a=rtpmap:98 H264/90000
+a=rtpmap:97 MPEG4/90000
+y=0200000001
+```
+
+- <--- 100 Trying
+
+```sh
+SIP/2.0 100 Trying
+Via: SIP/2.0/UDP 10.110.18.12:15060;branch=z9hG4bKlJokE2WBziHPvUlfeWPlw6WCwjStRKkA;rport=15060
+From: "SipServer" <sip:34020000002000000001@3402000000>;tag=FHO5ndkKpblM1wu8Vy6j
+To: <sip:34020000001318000001@3402000000>
+Call-ID: VqjJJAvkxIICQz2yDSdjkswI87nPvu5e
+CSeq: 1 INVITE
+User-Agent: Dahua SIP UAS V1.0
+Content-Length: 0
+```
+
+- <--- Dialog Establishenment
+
+```sh
+SIP/2.0 101 Dialog Establishement
+Via: SIP/2.0/UDP 10.110.18.12:15060;branch=z9hG4bKlJokE2WBziHPvUlfeWPlw6WCwjStRKkA;rport=15060
+From: "SipServer" <sip:34020000002000000001@3402000000>;tag=FHO5ndkKpblM1wu8Vy6j
+To: <sip:34020000001318000001@3402000000>;tag=668718229
+Call-ID: VqjJJAvkxIICQz2yDSdjkswI87nPvu5e
+CSeq: 1 INVITE
+Contact: <sip:34020000001318000001@10.110.18.75:5060>
+User-Agent: Dahua SIP UAS V1.0
+Content-Length: 0
+```
+
+- <--- OK
+
+```sh
+SIP/2.0 200 OK
+Via: SIP/2.0/UDP 10.110.18.12:15060;branch=z9hG4bKlJokE2WBziHPvUlfeWPlw6WCwjStRKkA;rport=15060
+From: "SipServer" <sip:34020000002000000001@3402000000>;tag=FHO5ndkKpblM1wu8Vy6j
+To: <sip:34020000001318000001@3402000000>;tag=668718229
+Call-ID: VqjJJAvkxIICQz2yDSdjkswI87nPvu5e
+CSeq: 1 INVITE
+Contact: <sip:34020000001318000001@10.110.18.75:5060>
+User-Agent: Dahua SIP UAS V1.0
+Content-Type: application/sdp
+Content-Length:   262
+
+v=0
+o=34020000001318000001 0 0 IN IP4 10.110.18.75
+s=Play
+i=VCam Live Video
+c=IN IP4 10.110.18.75
+t=0 0
+m=video 9730 TCP/RTP/AVP 96
+a=sendonly
+a=rtpmap:96 PS/90000
+a=streamprofile:0
+a=setup:active
+a=connection:new
+y=0200000001
+f=v/0/0/0/0/0a/0/0/0
+```
+
+- ---> ACK
+
+```sh
+ACK sip:34020000001318000001@10.110.18.75:5060 SIP/2.0
+Via: SIP/2.0/UDP 10.110.18.12:15060;branch=z9hG4bKdSi5wwjr14KQFYBOIZ4JAn7Q63XVHBFo;rport=15060
+From: "SipServer" <sip:34020000002000000001@3402000000>;tag=FHO5ndkKpblM1wu8Vy6j
+To: <sip:34020000001318000001@3402000000>;tag=668718229
+Call-ID: VqjJJAvkxIICQz2yDSdjkswI87nPvu5e
+CSeq: 2 ACK
+```
+
+- --> BYE
+
+```sh
+BYE sip:34020000001318000001@10.110.18.75:5060 SIP/2.0
+Via: SIP/2.0/UDP 10.110.18.12:15060;branch=z9hG4bKwMrZwuIJCih38E169qQoCNavDwZpruyY;rport=15060
+From: "SipServer" <sip:34020000002000000001@3402000000>;tag=FHO5ndkKpblM1wu8Vy6j
+To: <sip:34020000001318000001@3402000000>;tag=668718229
+Call-ID: VqjJJAvkxIICQz2yDSdjkswI87nPvu5e
+CSeq: 3 BYE
+```
+
+- <-- OK
+
+```sh
+SIP/2.0 200 OK
+Via: SIP/2.0/UDP 10.110.18.12:15060;branch=z9hG4bKwMrZwuIJCih38E169qQoCNavDwZpruyY;rport=15060
+From: "SipServer" <sip:34020000002000000001@3402000000>;tag=FHO5ndkKpblM1wu8Vy6j
+To: <sip:34020000001318000001@3402000000>;tag=668718229
+Call-ID: VqjJJAvkxIICQz2yDSdjkswI87nPvu5e
+CSeq: 3 BYE
+User-Agent: Dahua SIP UAS V1.0
+Content-Length: 0
+```
