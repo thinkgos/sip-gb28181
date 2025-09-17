@@ -7,14 +7,12 @@ import (
 	"log/slog"
 	"strconv"
 	"strings"
+	"sync/atomic"
 	"time"
 
 	"github.com/emiago/sipgo"
 	"github.com/emiago/sipgo/sip"
 	sip_gb28181 "github.com/thinkgos/sip-gb28181"
-
-	"net/http"
-	_ "net/http/pprof"
 
 	"github.com/icholy/digest"
 )
@@ -71,10 +69,6 @@ func main() {
 	srv.OnMessage(on_message)
 	log.Info("Listening on", "addr", *extIP)
 
-	go func() {
-		http.ListenAndServe(":6060", nil)
-	}()
-
 	ctx := context.TODO()
 	switch *tran {
 	case "tls", "wss":
@@ -113,62 +107,74 @@ func getLogger() *slog.Logger {
 	return slog.Default()
 }
 
-var chal digest.Challenge
+var cache_nonce = atomic.Pointer[string]{}
+
+func init() {
+	s := ""
+	cache_nonce.Store(&s)
+}
 
 func on_register(req *sip.Request, tx sip.ServerTransaction) {
 	log := slog.Default()
 	// https://www.rfc-editor.org/rfc/rfc2617#page-6
-	h := req.GetHeader("Authorization")
-	if h == nil {
-		chal = digest.Challenge{
+	hdrAuth := req.GetHeader("Authorization")
+	if hdrAuth == nil {
+		nonce := strconv.FormatInt(time.Now().UnixMicro(), 10)
+		cache_nonce.Store(&nonce)
+		challenge := &digest.Challenge{
 			Realm:     sip_domain,
-			Nonce:     strconv.FormatInt(time.Now().UnixMicro(), 10),
+			Nonce:     nonce,
 			Algorithm: "MD5",
 			QOP:       []string{"auth"},
 		}
-
 		res := sip.NewResponseFromRequest(req, 401, "Unauthorized", nil)
-		res.AppendHeader(sip.NewHeader("WWW-Authenticate", chal.String()))
+		res.AppendHeader(sip.NewHeader("WWW-Authenticate", challenge.String()))
 		tx.Respond(res)
 		return
 	}
 
-	cred, err := digest.ParseCredentials(h.Value())
+	cred, err := digest.ParseCredentials(hdrAuth.Value())
 	if err != nil {
-		log.Error("parsing creds failed", "error", err)
+		log.Error("parsing authorization failure", "error", err)
 		tx.Respond(sip.NewResponseFromRequest(req, 401, "Bad credentials", nil))
 		return
 	}
 	slog.Debug("parse cred", "cred", cred)
-	// Check registry
-	// passwd, exists := registry[cred.Username]
-	// if !exists {
-	// 	tx.Respond(sip.NewResponseFromRequest(req, 404, "Bad authorization header", nil))
-	// 	return
-	// }
 
 	// Make digest and compare response
-	digCred, err := digest.Digest(&chal, digest.Options{
-		Method:   "REGISTER",
-		URI:      cred.URI,
-		Username: cred.Username,
-		Password: sip_password,
-		Count:    cred.Nc,
-		A1:       "",
-		Cnonce:   cred.Cnonce,
-	})
+	digCred, err := digest.Digest(
+		&digest.Challenge{
+			Realm:     sip_domain,
+			Nonce:     *cache_nonce.Load(),
+			Algorithm: "MD5",
+			QOP:       []string{"auth"},
+		},
+		digest.Options{
+			Method:   "REGISTER",
+			URI:      cred.URI,
+			Username: cred.Username,
+			Password: sip_password,
+			Count:    cred.Nc,
+			A1:       "",
+			Cnonce:   cred.Cnonce,
+		},
+	)
 	if err != nil {
 		log.Error("Calc digest failed", "error", err)
 		tx.Respond(sip.NewResponseFromRequest(req, 401, "Bad credentials", nil))
 		return
 	}
 	if cred.Response != digCred.Response {
-		log.Error("Calc digest failed", "req response", cred.Response, "cal response", digCred.Response)
+		log.Error("Calc digest not equal", "req response", cred.Response, "calc response", digCred.Response)
 		tx.Respond(sip.NewResponseFromRequest(req, 401, "Unauthorized", nil))
 		return
 	}
 	log.Info("New client registered", "username", cred.Username)
 
+	host := req.Via().Host
+	port := req.Via().Port
+	from := req.Source()
+	to := req.Destination()
 	go func() {
 		data, _ := sip_gb28181.MarshalXML(&sip_gb28181.CatalogQuery{
 			CmdType:  "catalog",
@@ -179,17 +185,22 @@ func on_register(req *sip.Request, tx sip.ServerTransaction) {
 			Scheme:             "",
 			Wildcard:           false,
 			HierarhicalSlashes: false,
-			User:               "",
+			User:               cred.Username,
 			Password:           sip_password,
-			Host:               "",
-			Port:               0,
+			Host:               host,
+			Port:               port,
 			UriParams:          sip.HeaderParams{},
 			Headers:            sip.HeaderParams{},
 		})
+		req.SetSource(to)
+		req.SetDestination(from)
 		req.SetBody(data)
-		client.WriteRequest(req)
+		resp, err := client.Do(context.Background(), req)
+
 		if err != nil {
 			log.Error("xxxxxxxxxx", "err", err)
+		} else {
+			log.Debug("message resp", "resp", resp)
 		}
 	}()
 	tx.Respond(sip.NewResponseFromRequest(req, 200, "OK", nil))
