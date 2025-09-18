@@ -5,6 +5,7 @@ import (
 	"crypto/tls"
 	"flag"
 	"log/slog"
+	"math/rand/v2"
 	"strconv"
 	"strings"
 	"sync/atomic"
@@ -171,29 +172,46 @@ func on_register(req *sip.Request, tx sip.ServerTransaction) {
 	}
 	log.Info("New client registered", "username", cred.Username)
 
+	req.Destination()
 	host := req.Via().Host
 	port := req.Via().Port
-	from := req.Source()
-	to := req.Destination()
+	hdrFrom := req.From()
+	hdrTo := req.To()
+	remoteAddr := req.Source()
+	dest := req.Destination()
 	go func() {
-		data, _ := sip_gb28181.MarshalXML(&sip_gb28181.CatalogQuery{
-			CmdType:  "catalog",
-			Sn:       1000,
+		data, _ := sip_gb28181.MarshalXML(&sip_gb28181.DeviceInfoQuery{
+			CmdType:  sip_gb28181.CmdType_DeviceInfo,
+			Sn:       rand.IntN(800000) + 100000,
 			DeviceId: cred.Username,
 		})
-		req := sip.NewRequest(sip.MESSAGE, sip.Uri{
-			Scheme:             "",
-			Wildcard:           false,
-			HierarhicalSlashes: false,
-			User:               cred.Username,
-			Password:           sip_password,
-			Host:               host,
-			Port:               port,
-			UriParams:          sip.HeaderParams{},
-			Headers:            sip.HeaderParams{},
+		req := sip.NewRequest(sip.MESSAGE,
+			sip.Uri{
+				Scheme:             "sip",
+				Wildcard:           false,
+				HierarhicalSlashes: false,
+				User:               cred.Username,
+				Password:           sip_password,
+				Host:               host,
+				Port:               port,
+				UriParams:          sip.HeaderParams{},
+				Headers:            sip.HeaderParams{},
+			})
+		from := hdrTo.AsFrom()
+		req.AppendHeader(&from)
+		to := hdrFrom.AsTo()
+		req.AppendHeader(&to)
+		req.AppendHeader(&sip.ViaHeader{
+			ProtocolName:    "SIP",
+			ProtocolVersion: "2.0",
+			Transport:       "UDP",
+			Host:            host,
+			Port:            port,
+			Params: sip.NewParams().
+				Add("branch", sip.GenerateBranch()),
 		})
-		req.SetSource(to)
-		req.SetDestination(from)
+		req.SetSource(dest)
+		req.SetDestination(remoteAddr)
 		req.SetBody(data)
 		resp, err := client.Do(context.Background(), req)
 

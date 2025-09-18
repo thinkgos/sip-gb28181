@@ -29,14 +29,21 @@ Content-Length: 0
 ```
 
 - 消息头: SIP消息的方法`Method`(`REGISTER`), 接收方URI(`sip:34020000002000000001@3402000000`), SIP协议版本.
-
-- `Via`头: 包含了发送方的相关信息, 后续需要使用这些信息进行回复.
-  - `SIP/2.0/UDP`: 表示使用的是2.0版本的SIP协议, 使用的传输协议是UDP, 也可以使用TCP协议, 大部分设备默认是UDP协议, GB2016以前只支持UDP协议.
-  - `192.168.0.64:5060`: 为发送方的IP地址和端口号.
+  - `URI`: `sip:user:password@host:port;uri-parameters?headers`
+    - `scheme`: 指定协议类型, `sip`或`sips`.
+    - `user`: 标识用户名
+    - `password`: 认证密码
+    - `host`: 标识服务器的IP地址或域名.
+    - `port`: 标识服务器的端口号, 默认为5060.
+    - `uri-parameters`: 以分号分隔的参数列表, 如`transport=udp`.
+    - `headers`: 以问号开始的头部字段, subject=meeting.
+- `Via`头: 包含了请求发送方的相关信息, 后续需要使用这些信息进行回复.
+  - `SIP/2.0/UDP`: 表示使用的是SPI协议2.0版本, 使用的传输协议是UDP, 也可以使用TCP协议, 大部分设备默认是UDP协议, GB2016以前只支持UDP协议.
+  - `192.168.0.64:5060`: 为请求发送方的IP地址和端口号.
   - `branch`: 具体值是一个在整个SIP通信过程中不重复的数值. `branch`是一个事务ID(Transaction ID), 用于区分同一个UA所发起的不同Transaction, 它不会对未来的`request`或者是`response`造成影响, 对于遵循IETF RFC3261规范的实现, 这个`branch`参数的值必须用`z9hG4bK`字符串打头. 其它部分是对`To`, `From`, `Call-ID`头域和`Request-URI`按一定的算法加密后得到, 也可以是随机数或者UUID, 目前没发现有什么用途.
   - `rport`: 表示使用rport机制路由响应, 即发送的响应时, 按照rport中的端口发送SIP响应. 就是说IP和端口均完全遵照从哪里来的, 发回哪里去的原则. 如果没有rport字段时, 服务端的策略是IP使用UDP包中的地址, 即从哪里来回哪里去, 但是端口使用的是via中的端口, 详情见`IETF RFC35818`.
-- `From`头, 包含了**发送方**的逻辑标识. 在GB28181协议中是发送请求的设备国标ID和域国标ID信息. `tag`参数是为了身份认证的, 值为随机数字字符.
-- `To`头, 标明**接收方**的逻辑标识的. 在GB28181协议中填写的是发送的设备国标ID和域国标ID信息.
+- `From`头, 包含了请求**发送方**的逻辑标识. 在GB28181协议中是请求发送方的设备国标ID和域国标ID信息. `tag`参数是为了身份认证的, 值为随机数字字符.
+- `To`头, 标明请求**接收方**的逻辑标识的. 在GB28181协议中填写的是请求发送方的设备国标ID和域国标ID信息.
 - `Call-ID`头: Call-ID头是全局唯一的, 在同一个session中保持一致, 在不同session中不同.
 - `CSeq`头, CSeq头又叫Command Seqence(命令队列), 用于标识命令顺序. 值为序号+Method, 序号部分为无符号整数, 最大值为2^31. 序号起始值是随机的, 后续在同一个session中依次递增. 对于ACK和CANCEL中的CSeq与INVITE中的Cseq保持一致.
 - `Contact`头, 包含**源**的URI信息, 用来给响应消息直接和源建立连接用. 在GB28181协议中为SIP设备编码@源IP地址端口.
