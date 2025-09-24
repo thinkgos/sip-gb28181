@@ -5,14 +5,14 @@ import "encoding/xml"
 type ConfigDownloadQuery struct {
 	XMLName    xml.Name `xml:"Query"`
 	CmdType    string   `xml:"CmdType"`    // M, 命令类型
-	Sn         int      `xml:"SN"`         // M, sn
+	Sn         int64    `xml:"SN"`         // M, sn
 	DeviceId   string   `xml:"DeviceID"`   // M, 目标设备的编码
 	ConfigType string   `xml:"ConfigType"` // M, 查询配置参数类型
 }
 type ConfigDownloadResponse struct {
 	XMLName    xml.Name    `xml:"Response"`
 	CmdType    string      `xml:"CmdType"`
-	Sn         string      `xml:"SN"`
+	Sn         int64       `xml:"SN"`
 	DeviceId   string      `xml:"DeviceID"`
 	BasicParam *BasicParam `xml:"BasicParam"`
 	Result     string      `xml:"Result"`

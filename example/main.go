@@ -182,7 +182,7 @@ func on_register(req *sip.Request, tx sip.ServerTransaction) {
 	go func() {
 		data, _ := sip_gb28181.MarshalXML(&sip_gb28181.DeviceInfoQuery{
 			CmdType:  sip_gb28181.CmdType_DeviceInfo,
-			Sn:       rand.IntN(800000) + 100000,
+			Sn:       int64(rand.IntN(800000) + 100000),
 			DeviceId: cred.Username,
 		})
 		req := sip.NewRequest(sip.MESSAGE,

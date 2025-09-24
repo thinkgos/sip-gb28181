@@ -5,13 +5,13 @@ import "encoding/xml"
 type CatalogQuery struct {
 	XMLName  xml.Name `xml:"Query"`    // O, 不填
 	CmdType  string   `xml:"CmdType"`  // M, 命令类型
-	Sn       int      `xml:"SN"`       // M, sn
+	Sn       int64    `xml:"SN"`       // M, sn
 	DeviceId string   `xml:"DeviceID"` // M, 目标设备的编码
 }
 type CatalogResponse struct {
 	XMLName    xml.Name             `xml:"Response"`
 	CmdType    string               `xml:"CmdType"`    // M, 命令类型
-	Sn         int                  `xml:"SN"`         // M, sn
+	Sn         int64                `xml:"SN"`         // M, sn
 	DeviceId   string               `xml:"DeviceID"`   // M, 目标设备的编码
 	SumNum     int                  `xml:"SumNum"`     // M, 总数
 	DeviceList []CatalogDeviceEntry `xml:"DeviceList"` // O, 设备列表
