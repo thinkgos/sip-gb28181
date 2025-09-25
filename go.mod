@@ -4,7 +4,7 @@ go 1.24.0
 
 require (
 	github.com/bits-and-blooms/bitset v1.24.0
-	github.com/emiago/sipgo v1.0.0-alpha-1
+	github.com/emiago/sipgo v1.0.1-alpha
 	github.com/icholy/digest v1.1.0
 	github.com/pion/sdp/v3 v3.0.16
 	github.com/stretchr/testify v1.11.1

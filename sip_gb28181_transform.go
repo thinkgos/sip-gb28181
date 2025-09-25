@@ -12,25 +12,25 @@ const XMLHeader_GB2312 = `<?xml version="1.0" encoding="GB2312"?>` + "\n"
 const XmlHeader_GBK = `<?xml version="1.0" encoding="GBK"?>` + "\n"
 
 // GBK 转 UTF-8
-func GbkToUtf8(s []byte) ([]byte, error) {
-	reader := transform.NewReader(bytes.NewReader(s), simplifiedchinese.GBK.NewDecoder())
+func GbkToUtf8(b []byte) ([]byte, error) {
+	reader := transform.NewReader(bytes.NewReader(b), simplifiedchinese.GBK.NewDecoder())
 	return io.ReadAll(reader)
 }
 
 // UTF-8 转 GBK
-func Utf8ToGbk(s []byte) ([]byte, error) {
-	reader := transform.NewReader(bytes.NewReader(s), simplifiedchinese.GBK.NewEncoder())
+func Utf8ToGbk(b []byte) ([]byte, error) {
+	reader := transform.NewReader(bytes.NewReader(b), simplifiedchinese.GBK.NewEncoder())
 	return io.ReadAll(reader)
 }
 
 // GB18030 转 UTF-8
-func GbkToGB18030(s []byte) ([]byte, error) {
-	reader := transform.NewReader(bytes.NewReader(s), simplifiedchinese.GB18030.NewDecoder())
+func GbkToGB18030(b []byte) ([]byte, error) {
+	reader := transform.NewReader(bytes.NewReader(b), simplifiedchinese.GB18030.NewDecoder())
 	return io.ReadAll(reader)
 }
 
 // UTF-8 转 GB18030
-func Utf8ToGB18030(s []byte) ([]byte, error) {
-	reader := transform.NewReader(bytes.NewReader(s), simplifiedchinese.GB18030.NewEncoder())
+func Utf8ToGB18030(b []byte) ([]byte, error) {
+	reader := transform.NewReader(bytes.NewReader(b), simplifiedchinese.GB18030.NewEncoder())
 	return io.ReadAll(reader)
 }
