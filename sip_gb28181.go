@@ -21,4 +21,5 @@ const (
 	CmdType_DeviceInfo    = "DeviceInfo"
 	CmdType_RecordInfo    = "RecordInfo"
 	CmdType_DeviceControl = "DeviceControl"
+	CmdType_DeviceStatus  = "DeviceStatus"
 )
