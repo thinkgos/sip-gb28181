@@ -1,6 +1,6 @@
 package ctrl
 
-const DeviceControlMagic byte = 0xA5
+const DeviceControl_Magic byte = 0xA5
 
 // 组合码1
 // 高4位bit代表的是版本信息, 低4位bit代表的是校验位.
@@ -12,7 +12,7 @@ func CombinedCode1(magic, ver byte) byte {
 // 组合码2
 // 高4位是数据3，低4位是地址的高4位,没有特别指明高是位, 表明与所指定功能无关
 func CombinedCode2(data3, addr byte) byte {
-	return (data3>>4)&0x0f + data3&0x0f + addr&0x0f
+	return (data3<<4)&0xf0 + addr&0x0f
 }
 
 func Checksum(bs []byte) byte {

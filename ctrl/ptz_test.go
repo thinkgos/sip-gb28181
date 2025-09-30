@@ -1,6 +1,10 @@
 package ctrl
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/stretchr/testify/require"
+)
 
 func Test_Ptz(t *testing.T) {
 	ptz := &Ptz{
@@ -11,5 +15,5 @@ func Test_Ptz(t *testing.T) {
 		TiltSpeed: 0,
 		ZoomSpeed: 1,
 	}
-	t.Log(ptz.Value())
+	require.Equal(t, "A50F0100000010C5", ptz.Value())
 }

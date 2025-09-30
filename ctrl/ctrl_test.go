@@ -7,5 +7,5 @@ import (
 )
 
 func Test_CombinedCode1(t *testing.T) {
-	require.Equal(t, byte(0x0f), CombinedCode1(DeviceControlMagic, 0x00))
+	require.Equal(t, byte(0x0f), CombinedCode1(DeviceControl_Magic, 0x00))
 }

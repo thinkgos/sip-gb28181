@@ -43,14 +43,14 @@ func (p *Ptz) Value() string {
 
 	var cmd [8]byte
 
-	cmd[0] = DeviceControlMagic
-	cmd[1] = byte(CombinedCode1(DeviceControlMagic, 0x00))
-	cmd[2] = 0x01              // 固定地址01
-	cmd[3] = ctrl              // 表示云台的镜头缩小、镜头放大、上、下、左、右，写入指令码的16进制数
-	cmd[4] = p.PlanSpeed       // 表示水平控制速度，写入水平控制方向速度的十六进制数
-	cmd[5] = p.TiltSpeed       // 表示垂直控制速度，写入垂直控制方向速度的十六进制数
-	cmd[6] = p.ZoomSpeed << 4  // 表示变倍控制速度，写入变倍控制方向速度的十六进制数
-	cmd[7] = Checksum(cmd[:7]) // 校验码
+	cmd[0] = DeviceControl_Magic
+	cmd[1] = CombinedCode1(DeviceControl_Magic, 0x00)
+	cmd[2] = 0x01                          // 固定地址01
+	cmd[3] = ctrl                          // 表示云台的镜头缩小、镜头放大、上、下、左、右，写入指令码的16进制数
+	cmd[4] = p.PlanSpeed                   // 表示水平控制速度，写入水平控制方向速度的十六进制数
+	cmd[5] = p.TiltSpeed                   // 表示垂直控制速度，写入垂直控制方向速度的十六进制数
+	cmd[6] = CombinedCode2(p.ZoomSpeed, 0) // 表示变倍控制速度，写入变倍控制方向速度的十六进制数
+	cmd[7] = Checksum(cmd[:7])             // 校验码
 
 	b := strings.Builder{}
 	b.Grow(hex.EncodedLen(len(cmd)))
